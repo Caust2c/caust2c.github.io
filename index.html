@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Portfolio - Hardik</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.fog.min.js"></script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 2s ease-in-out forwards;
+    }
+    body, html {
+      margin: 0;
+      height: 100%;
+      overflow-x: hidden;
+    }
+    #vanta-bg {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    body {
+  cursor: url('assets/arrow.cur'), auto;
+}
+a, button, [role="button"] {
+  cursor: url('assets/link.cur'), pointer;
+}
+  </style>
+</head>
+<body class="text-white flex flex-col min-h-screen">
+  
+  <div id="vanta-bg"></div>
+  <button id="back-to-home"
+  class="fixed top-6 left-6 z-30 px-6 py-3 rounded-2xl bg-white/30 backdrop-blur-md border border-white/30 shadow-[4px_4px_0px_#000] text-black font-bold text-lg transition-all duration-150 hover:bg-white/60"
+  style="display: flex; align-items: center; gap: 0.5rem;">
+  <span style="font-size:1.5em;">↑</span>
+  <span id="scroll-percent">Home</span>
+</button>
+
+  <section id="home" class="flex flex-1 items-center justify-center z-10 relative min-h-screen">
+    <div class="flex items-center space-x-10">
+      <img src="assets/profile.png" alt="Hardik Lalla" 
+        class="w-80 h-80 rounded-full border-4 border-white/10 shadow-lg 
+               opacity-0 animate-fadeIn">
+      <div>
+        <h1 class="text-3xl font-bold text-white mb-4">
+            <span id="typed-hero"></span><span id="hero-cursor" style="display:inline-block;width:1ch;color:#99f6e4;">|</span>
+            <script>
+              const heroText = [
+                { text: "Hey, I'm ", color: "inherit" },
+                { text: "Hardik Lalla", color: "#99f6e4" }, 
+                { text: " and welcome to my website!", color: "inherit" }
+              ];
+              const typedHero = document.getElementById("typed-hero");
+              const heroCursor = document.getElementById("hero-cursor");
+              let heroPart = 0, heroChar = 0;
+
+              setInterval(() => {
+                heroCursor.style.visibility = heroCursor.style.visibility === "hidden" ? "visible" : "hidden";
+              }, 500);
+
+              function typeHero() {
+                if (heroPart >= heroText.length) {
+                  heroCursor.style.visibility = "visible";
+                  return;
+                }
+                let html = "";
+                for (let i = 0; i < heroPart; i++) {
+                  if (heroText[i].color === "inherit") {
+                    html += heroText[i].text;
+                  } else {
+                    html += `<span style="color:${heroText[i].color};">${heroText[i].text}</span>`;
+                  }
+                }
+                const partial = heroText[heroPart].text.slice(0, heroChar + 1);
+                if (heroText[heroPart].color === "inherit") {
+                  html += partial;
+                } else {
+                  html += `<span style="color:${heroText[heroPart].color};">${partial}</span>`;
+                }
+                typedHero.innerHTML = html;
+
+                if (heroChar < heroText[heroPart].text.length - 1) {
+                  heroChar++;
+                  setTimeout(typeHero, 60);
+                } else {
+                  heroChar = 0;
+                  heroPart++;
+                  setTimeout(typeHero, 200);
+                }
+              }
+              typeHero();
+            </script>
+        </h1>
+        <p class="text-lg text-gray-200 mb-6">
+          Developer | Problem Solver | Motorsports Enthusiast
+        </p>
+        <div class="space-x-4">
+          <a href="#about" 
+            class="px-6 py-2 rounded-xl 
+                   bg-white/20 backdrop-blur-md 
+                   border border-white/30
+                   shadow-[4px_4px_0px_#000]
+                   hover:translate-y-1 hover:shadow-[2px_2px_0px_#000] 
+                   active:translate-y-2 active:shadow-[0px_0px_0px_#000] 
+                   transition-all duration-150">
+            About
+          </a>
+          <a href="#projects" 
+            class="px-6 py-2 rounded-xl 
+                   bg-white/20 backdrop-blur-md 
+                   border border-white/30
+                   shadow-[4px_4px_0px_#000]
+                   hover:translate-y-1 hover:shadow-[2px_2px_0px_#000] 
+                   active:translate-y-2 active:shadow-[0px_0px_0px_#000] 
+                   transition-all duration-150">
+            Projects
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="flex flex-1 items-center justify-center px-10 min-h-screen">
+    <div class="backdrop-blur-md bg-white/10 p-10 rounded-2xl shadow-xl max-w-xl w-full">
+      <h1 class="text-4xl font-bold mb-6">
+        <span id="about-typed" class="font-bold"></span>
+        <script>
+          const fonts = [
+            "'Arial', sans-serif",
+            "'Courier New', Courier, monospace",
+            "'Georgia', serif",
+            "'Times New Roman', Times, serif",
+            "'Trebuchet MS', sans-serif",
+            "'Lucida Console', Monaco, monospace",
+            "'Verdana', Geneva, sans-serif",
+            "'Palatino Linotype', 'Book Antiqua', Palatino, serif"
+          ];
+
+          const textParts = [
+            { text: "About ", color: "inherit" },
+            { text: "Me", color: "#2dd4bf" } 
+          ];
+
+          const aboutTyped = document.getElementById("about-typed");
+          let fontIdx = 0;
+          let charIdx = 0;
+          let partIdx = 0;
+
+          function typeNextChar() {
+            if (partIdx >= textParts.length) {
+              setTimeout(() => {
+                fontIdx = (fontIdx + 1) % fonts.length;
+                aboutTyped.innerHTML = "";
+                charIdx = 0;
+                partIdx = 0;
+                typeNextChar();
+              }, 1200);
+              return;
+            }
+
+            const part = textParts[partIdx];
+            const currentFont = fonts[fontIdx];
+            aboutTyped.style.fontFamily = currentFont;
+
+            let html = "";
+            for (let i = 0; i < partIdx; i++) {
+              if (textParts[i].color === "inherit") {
+                html += textParts[i].text;
+              } else {
+                html += `<span style="color:${textParts[i].color};font-style:italic;">${textParts[i].text}</span>`;
+              }
+            }
+            
+            const partial = part.text.slice(0, charIdx + 1);
+            if (part.color === "inherit") {
+              html += partial;
+            } else {
+              html += `<span style="color:${part.color};font-style:italic;">${partial}</span>`;
+            }
+            aboutTyped.innerHTML = html;
+
+            if (charIdx < part.text.length - 1) {
+              charIdx++;
+              setTimeout(typeNextChar, 80);
+            } else {
+              charIdx = 0;
+              partIdx++;
+              setTimeout(typeNextChar, 200);
+            }
+          }
+
+          typeNextChar();
+        </script>
+      </h1>
+      <p class="text-xl text-gray-200 leading-relaxed"></p>
+        I’m Hardik, an undergraduate at VIT Chennai. I have a passion for
+        learning new technologies and applying them in real-world projects.
+        I love diving under the hood to understand how things work and finding elegant solutions that others might overlook. 
+        When I’m not coding, I tinker with everyday hardware and thinking about different approaches to a problem.
+      </p>
+    </div>
+  </section>
+
+<section class="min-h-screen flex items-center justify-center px-10">
+  <div class="backdrop-blur-md bg-white/10 p-10 rounded-2xl shadow-xl max-w-4xl w-full">
+    <h2 class="text-2xl font-semibold mb-8 text-center">Skills</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+      <div class="group relative bg-black/20 rounded-xl p-6 flex flex-col items-center justify-center transition transform hover:scale-105 hover:bg-black/40">
+        <img src="assets/python.svg" alt="Python" class="w-12 h-12 mb-3">
+        <span class="text-lg font-medium">Python</span>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition bg-black/70 rounded-xl p-4">
+          <p class="text-sm mb-2">Used heavily for AI/ML projects</p>
+          <div class="w-full bg-white/20 rounded-full h-2">
+            <div class="bg-green-300 h-2 rounded-full" style="width: 80%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="group relative bg-black/20 rounded-xl p-6 flex flex-col items-center justify-center transition transform hover:scale-105 hover:bg-black/40">
+        <img src="assets/cpp.svg" alt="C++" class="w-12 h-12 mb-3">
+        <span class="text-lg font-medium">C / C++</span>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition bg-black/70 rounded-xl p-4">
+          <p class="text-sm mb-2">Use regularly for DSA and embedded systems</p>
+          <div class="w-full bg-white/20 rounded-full h-2">
+            <div class="bg-green-200 h-2 rounded-full" style="width: 70%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="group relative bg-black/20 rounded-xl p-6 flex flex-col items-center justify-center transition transform hover:scale-105 hover:bg-black/40">
+        <img src="assets/reverse.svg" alt="Reverse Engineering" class="w-12 h-12 mb-3">
+        <span class="text-lg font-medium">Reverse Engg.</span>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition bg-black/70 rounded-xl p-4">
+          <p class="text-sm mb-2">Basic JS deobfuscation and rewriting</p>
+          <div class="w-full bg-white/20 rounded-full h-2">
+            <div class="bg-red-400 h-2 rounded-full" style="width: 25%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="group relative bg-black/20 rounded-xl p-6 flex flex-col items-center justify-center transition transform hover:scale-105 hover:bg-black/40">
+        <img src="assets/java.svg" alt="Java" class="w-12 h-12 mb-3">
+        <span class="text-lg font-medium">Java</span>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition bg-black/70 rounded-xl p-4">
+          <p class="text-sm mb-2">Started in 2019, extremely confident in its use cases</p>
+          <div class="w-full bg-white/20 rounded-full h-2">
+            <div class="bg-green-400 h-2 rounded-full" style="width: 90%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="group relative bg-black/20 rounded-xl p-6 flex flex-col items-center justify-center transition transform hover:scale-105 hover:bg-black/40">
+        <img src="assets/js.svg" alt="Javascript" class="w-12 h-12 mb-3">
+        <span class="text-lg font-medium">Javascript</span>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition bg-black/70 rounded-xl p-4">
+          <p class="text-sm mb-2">Learnt various frameworks and applied it in projects</p>
+          <div class="w-full bg-white/20 rounded-full h-2">
+        <div class="bg-yellow-400 h-2 rounded-full" style="width: 50%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="group relative bg-black/20 rounded-xl p-6 flex flex-col items-center justify-center transition transform hover:scale-105 hover:bg-black/40">
+        <img src="assets/html.svg" alt="HTML5" class="w-12 h-12 mb-3">
+        <span class="text-lg font-medium">HTML5</span>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition bg-black/70 rounded-xl p-4">
+          <p class="text-sm mb-2">Built accessible, well-structured web pages with modern HTML5</p>
+          <div class="w-full bg-white/20 rounded-full h-2">
+        <div class="bg-green-400 h-2 rounded-full" style="width: 85%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="group relative bg-black/20 rounded-xl p-6 flex flex-col items-center justify-center transition transform hover:scale-105 hover:bg-black/40">
+        <img src="assets/css.svg" alt="CSS3" class="w-12 h-12 mb-3">
+        <span class="text-lg font-medium">CSS3</span>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition bg-black/70 rounded-xl p-4">
+          <p class="text-sm mb-2">Love crafting beautiful, responsive layouts and smooth animations with modern CSS</p>
+          <div class="w-full bg-white/20 rounded-full h-2">
+        <div class="bg-green-300 h-2 rounded-full" style="width: 75%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="min-h-screen flex items-center justify-center px-10">
+  <div class="max-w-6xl w-full">
+    <h2 class="text-2xl font-semibold mb-10 text-center">Projects I've Built</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="group relative bg-white/10 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden transition-all duration-500 hover:h-80 h-56">
+        <div class="flex h-full">
+          <div class="w-1/2 p-6 flex flex-col justify-between">
+            <div>
+              <h3 class="text-lg font-semibold mb-3">Optimized approach at Lift Logic</h3>
+              <div class="flex gap-2">
+                <img src="assets/python.svg" alt="Python" class="w-6 h-6">
+                <img src="assets/ml.svg" alt="ML" class="w-6 h-6">
+                <img src="assets/jupyter.svg" alt="Jupyter" class="w-6 h-6">
+              </div>
+            </div>
+            <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+              <p class="text-sm mb-3">Elevator optimization project that uses rule-based optimization and Random Forest algo.</p>
+              <a href="https://github.com/Caust2c/Lift-logic-but-faster" target="_blank" class="px-4 py-2 bg-green-500 rounded-lg text-white hover:bg-green-600">View Repo</a>
+            </div>
+          </div>
+          <div class="w-1/2">
+            <img src="assets/elevator.jpg" alt="Project Preview" class="h-full w-full object-cover">
+          </div>
+        </div>
+      </div>
+      <div class="group relative bg-white/10 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden transition-all duration-500 hover:h-80 h-56">
+        <div class="flex h-full">
+          <div class="w-1/2 p-6 flex flex-col justify-between">
+            <div>
+              <h3 class="text-lg font-semibold mb-3">Guided TrackMania Reinforcement Learning</h3>
+              <div class="flex gap-2">
+                <img src="assets/python.svg" alt="Python" class="w-6 h-6">
+                <img src="assets/csharp.svg" alt="C Sharp" class="w-6 h-6">
+              </div>
+            </div>
+            <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+              <p class="text-sm mb-3">Particle Swarm Optimization to find the best racing line and extracting .json from any Map.gbx</p>
+              <a href="https://github.com/Caust2c/Franz-Hermann-TMRL-Approach" target="_blank" class="px-4 py-2 bg-green-500 rounded-lg text-white hover:bg-green-600">View Repo</a>
+            </div>
+          </div>
+          <div class="w-1/2">
+            <img src="assets/tmrl.webp" alt="Project Preview" class="h-full w-full object-cover">
+          </div>
+        </div>
+      </div>
+      <div class="group relative bg-white/10 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden transition-all duration-500 hover:h-80 h-56">
+  <div class="flex h-full">
+    <div class="w-1/2 p-6 flex flex-col justify-between">
+      <div>
+        <h3 class="text-lg font-semibold mb-3">Portfolio website</h3>
+        <div class="flex gap-2">
+          <img src="assets/html.svg" alt="Html" class="w-6 h-6">
+          <img src="assets/css.svg" alt="Css" class="w-6 h-6">
+          <img src="assets/js.svg" alt="Javascript" class="w-6 h-6">
+        </div>
+      </div>
+      <div class="opacity-0 group-hover:opacity-100 transition duration-300">
+        <p class="text-sm mb-3">A Portfolio website with a modern glassmorphic aesthetic to display my skills, projects, and socials.</p>
+        <a href="https://github.com/Caust2c/Franz-Hermann-TMRL-Approach" target="_blank" class="px-4 py-2 bg-green-500 rounded-lg text-white hover:bg-green-600">View Repo</a>
+      </div>
+    </div>
+    <div class="w-1/2 relative">
+      <img src="assets/website.jpg" alt="Project Preview" class="h-full w-full object-cover">
+      <p class="absolute bottom-2 right-2 text-[10px] text-white/70 bg-black/40 px-2 py-1 rounded">
+        Photo by 
+        <a href="https://unsplash.com/@ilyapavlov?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash" target="_blank" class="underline">Ilya Pavlov</a> 
+        on 
+        <a href="https://unsplash.com/photos/monitor-showing-java-programming-OqtafYT5kTw?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash" target="_blank" class="underline">Unsplash</a>
+      </p>
+    </div>
+  </div>
+</div>
+    </div>
+     <div class="text-center mt-8">
+  <a href="https://github.com/Caust2c?tab=repositories"
+     target="_blank"
+     class="px-6 py-2 rounded-xl 
+            bg-white/20 backdrop-blur-md 
+            border border-white/30
+            shadow-[4px_4px_0px_#000]
+            hover:translate-y-1 hover:shadow-[2px_2px_0px_#000] 
+            active:translate-y-2 active:shadow-[0px_0px_0px_#000] 
+            transition-all duration-150 font-semibold text-white">
+    See All on GitHub
+  </a>
+</div>
+  </div>
+</section>
+
+  <footer class="backdrop-blur-md bg-white/10 py-4 fixed bottom-0 left-0 w-full z-10">
+    <div class="flex justify-center space-x-6">
+      <a href="https://github.com/Caust2c" target="_blank" class="hover:scale-125 hover:drop-shadow-[0_0_10px_#000000] transition-transform">
+        <img src="assets/github.svg" alt="GitHub" class="w-8 h-8">
+      </a>
+      <a href="https://linkedin.com/in/hardik-lalla-876324378" target="_blank" class="hover:scale-125 hover:drop-shadow-[0_0_10px_#0ea5e9] transition-transform">
+        <img src="assets/linkedin.svg" alt="LinkedIn" class="w-8 h-8">
+      </a>
+      <a href="mailto:hardikomlalla@hotmail.com" class="hover:scale-125 hover:drop-shadow-[0_0_10px_#f43f5e] transition-transform">
+        <img src="assets/mail.svg" alt="Email" class="w-8 h-8">
+      </a>
+    </div>
+    <p class="text-center text-gray-800 text-sm mt-2"> &copy; 2025 Hardik Lalla. All rights reserved.</p>
+  </footer>
+
+  <script>
+    VANTA.FOG({
+      el: "#vanta-bg",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      highlightColor: 0x000000,
+      midtoneColor: 0x4040ac,
+      lowlightColor: 0x50448e,
+      baseColor: 0xffebeb,
+      blurFactor: 0.5
+    })
+  </script>
+<script>
+  document.querySelector('a[href="#about"]').addEventListener("click", function (e) {
+    e.preventDefault();
+    const target = document.querySelector("#about");
+    if (target) {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  });
+</script>
+<script>
+  document.querySelector('a[href="#projects"]').addEventListener("click", function (e) {
+    e.preventDefault();
+    const target = document.querySelector("#projects");
+    if (target) {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  });
+</script>
+<script>
+  // Simple back to home (hero) scroll
+  document.getElementById('back-to-home').addEventListener('click', function() {
+    document.getElementById('home').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+</script>
+
+
+</body>
+</html>
